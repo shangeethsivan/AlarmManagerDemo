@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.shangeeth.mobiclock.MainActivity">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:text="Set Alarm"
+        />
+    <TimePicker
+        android:id="@+id/time_picker"
+        style="@style/MatchParenAndWrapContent"
+        android:timePickerMode="spinner" />
+
+    <TextView
+        android:id="@+id/time_remaining_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:text="Alarm in 23 hours and 59 minutes"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="1dp"
+        android:background="@color/colorAccent"/>
+    <LinearLayout
+        style="@style/MatchParenAndWrapContent"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:textColor="@color/textColor"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:gravity="center"
+            android:text="Set Repeating"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/repeat_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorAccent"/>
+
+    <LinearLayout
+        android:id="@+id/checkbox_group_ll"
+        style="@style/MatchParenAndWrapContent"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/Checkbox"
+            android:textColor="@color/textColor"
+            android:layout_weight="0.2"
+            android:text="S" />
+
+        <CheckBox
+            android:layout_width="0dp"
+            style="@style/Checkbox"
+            android:textColor="@color/textColor"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="M" />
+
+        <CheckBox
+            android:layout_width="0dp"
+            android:textColor="@color/textColor"
+            style="@style/Checkbox"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="T" />
+
+        <CheckBox
+            android:layout_width="0dp"
+            android:textColor="@color/textColor"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="W" />
+
+        <CheckBox
+            android:layout_width="0dp"
+            android:textColor="@color/textColor"
+            style="@style/Checkbox"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="T" />
+
+        <CheckBox
+            android:layout_width="0dp"
+            android:textColor="@color/textColor"
+            style="@style/Checkbox"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="F" />
+
+        <CheckBox
+            android:layout_width="0dp"
+            android:textColor="@color/textColor"
+            style="@style/Checkbox"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:text="S" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/alarm_btn"
+        android:background="@drawable/btn_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Set Alarm" />
+</LinearLayout>
