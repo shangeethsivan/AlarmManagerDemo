@@ -5,20 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.shangeeth.mobiclock.MainActivity">
+    tools:context="com.shangeeth.mobiclock.ui.MainActivity">
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorAccent"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_margin="10dp"
-        android:text="Set Alarm"
-        />
     <TimePicker
         android:id="@+id/time_picker"
+        android:layout_marginTop="30dp"
         style="@style/MatchParenAndWrapContent"
         android:timePickerMode="spinner" />
 
@@ -27,19 +18,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/grey"
+        android:visibility="visible"
         android:textSize="15sp"
         android:gravity="center"
-        android:text="Alarm in 23 hours and 59 minutes"
+        android:text="Alarm in 23 Hours 59 Minutes"
         />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="1dp"
-        android:background="@color/colorAccent"/>
     <LinearLayout
         style="@style/MatchParenAndWrapContent"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="70dp">
 
         <TextView
             android:layout_width="0dp"
@@ -53,15 +40,11 @@
         <Switch
             android:id="@+id/repeat_switch"
             android:layout_width="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
 
-    <View
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorAccent"/>
 
     <LinearLayout
         android:id="@+id/checkbox_group_ll"
@@ -71,6 +54,7 @@
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/sunday_cbox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@style/Checkbox"
@@ -79,6 +63,7 @@
             android:text="S" />
 
         <CheckBox
+            android:id="@+id/monday_cbox"
             android:layout_width="0dp"
             style="@style/Checkbox"
             android:textColor="@color/textColor"
@@ -87,6 +72,7 @@
             android:text="M" />
 
         <CheckBox
+            android:id="@+id/tuesday_cbox"
             android:layout_width="0dp"
             android:textColor="@color/textColor"
             style="@style/Checkbox"
@@ -95,6 +81,7 @@
             android:text="T" />
 
         <CheckBox
+            android:id="@+id/wednesday_cbox"
             android:layout_width="0dp"
             android:textColor="@color/textColor"
             android:layout_height="wrap_content"
@@ -102,6 +89,7 @@
             android:text="W" />
 
         <CheckBox
+            android:id="@+id/thursday_cbox"
             android:layout_width="0dp"
             android:textColor="@color/textColor"
             style="@style/Checkbox"
@@ -110,6 +98,7 @@
             android:text="T" />
 
         <CheckBox
+            android:id="@+id/friday_cbox"
             android:layout_width="0dp"
             android:textColor="@color/textColor"
             style="@style/Checkbox"
@@ -118,6 +107,7 @@
             android:text="F" />
 
         <CheckBox
+            android:id="@+id/saturday_cbox"
             android:layout_width="0dp"
             android:textColor="@color/textColor"
             style="@style/Checkbox"
@@ -127,12 +117,4 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/alarm_btn"
-        android:background="@drawable/btn_bg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:text="Set Alarm" />
 </LinearLayout>

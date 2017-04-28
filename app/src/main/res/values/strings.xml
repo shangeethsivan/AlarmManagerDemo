@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MobiClock</string>
+    <string name="time_extra">time_extra</string>
 </resources>
