@@ -40,7 +40,7 @@ public class AlarmDetailActivity extends AppCompatActivity implements AudioManag
         lWindow.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         lWindow.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         lWindow.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-//        lWindow.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        lWindow.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
         AudioManager lAm = (AudioManager) getSystemService(AUDIO_SERVICE);
 
@@ -108,6 +108,12 @@ public class AlarmDetailActivity extends AppCompatActivity implements AudioManag
 //        mRingtone.stop();
 //        mVibrator.cancel();
         super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG, "onRestart: " );
     }
 
     @Override
