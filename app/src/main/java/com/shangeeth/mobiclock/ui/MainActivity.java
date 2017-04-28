@@ -2,7 +2,9 @@ package com.shangeeth.mobiclock.ui;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
@@ -24,6 +26,8 @@ import com.shangeeth.mobiclock.receivers.AlarmReceiver;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+//TODO: Convert the alarm to Full Screen Dialog
+
 public class MainActivity extends AppCompatActivity {
 
     protected TextView mTimeRemainingTV;
@@ -31,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private Switch mRepeatSwitch;
     private LinearLayout mCheckBoxGroup;
     private Calendar mCalendar;
-    private ArrayList<String> mRepeatedDaysList;
     private static final String TAG = "MainActivity";
-    //TODO: Create a arraylist and store the days and have a boolean to check it
-    //TODO: Use the arraylist to  iterate and set the repeating alarm
+
+    String mRepeatedDayData = "0000000";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -46,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         mCheckBoxGroup = (LinearLayout) findViewById(R.id.checkbox_group_ll);
         mTimeRemainingTV = (TextView) findViewById(R.id.time_remaining_tv);
         mCalendar = Calendar.getInstance();
-        mRepeatedDaysList = new ArrayList<>();
 
         setListeners();
 
@@ -88,9 +91,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mRepeatedDaysList.add("1");
+                    mRepeatedDayData = "1" + mRepeatedDayData.substring(1);
                 } else {
-                    mRepeatedDaysList.remove("1");
+                    mRepeatedDayData = "0" + mRepeatedDayData.substring(1);
                 }
             }
         });
@@ -98,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mRepeatedDaysList.add("2");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 1) + "1" + mRepeatedDayData.substring(2);
                 } else {
-                    mRepeatedDaysList.remove("2");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 1) + "0" + mRepeatedDayData.substring(2);
                 }
             }
         });
@@ -108,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mRepeatedDaysList.add("3");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 2) + "1" + mRepeatedDayData.substring(3);
                 } else {
-                    mRepeatedDaysList.remove("3");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 2) + "0" + mRepeatedDayData.substring(3);
                 }
             }
         });
@@ -118,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mRepeatedDaysList.add("4");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 3) + "1" + mRepeatedDayData.substring(4);
                 } else {
-                    mRepeatedDaysList.remove("4");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 3) + "0" + mRepeatedDayData.substring(4);
                 }
             }
         });
@@ -128,9 +131,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mRepeatedDaysList.add("5");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 4) + "1" + mRepeatedDayData.substring(5);
                 } else {
-                    mRepeatedDaysList.remove("5");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 4) + "0" + mRepeatedDayData.substring(5);
                 }
             }
         });
@@ -138,9 +141,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mRepeatedDaysList.add("6");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 5) + "1" + mRepeatedDayData.substring(6);
                 } else {
-                    mRepeatedDaysList.remove("6");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 5) + "0" + mRepeatedDayData.substring(6);
                 }
             }
         });
@@ -148,9 +151,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mRepeatedDaysList.add("7");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 6) + "1";
                 } else {
-                    mRepeatedDaysList.remove("7");
+                    mRepeatedDayData = mRepeatedDayData.substring(0, 6) + "0";
                 }
             }
         });
@@ -176,47 +179,33 @@ public class MainActivity extends AppCompatActivity {
      * Sets the alarm for the selected time in the time picker
      */
     private void setAlarm() {
-        AlarmManager lAlarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
 
         if (mRepeatSwitch.isChecked()) {
 
-            Intent lIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            for (int i = 0; i < mRepeatedDaysList.size(); i++) {
+            SharedPreferences lSharedPreferences = getPreferences(Context.MODE_PRIVATE);
 
-                PendingIntent lPendingIntent = PendingIntent.getBroadcast(this, 100 + Integer.valueOf(mRepeatedDaysList.get(i)), lIntent, PendingIntent.FLAG_ONE_SHOT);
-                // for alarm ...
-                Calendar lCalendar = Calendar.getInstance();
+            SharedPreferences.Editor lEditor = lSharedPreferences.edit();
+            lEditor.putBoolean(getString(R.string.is_repeat_alarm_set), true);
+            lEditor.putString(getString(R.string.repetive_days), mRepeatedDayData);
+            lEditor.putString(getString(R.string.time_of_alarm), mTimePicker.getCurrentHour() + ":" + mTimePicker.getCurrentMinute());
 
-                lCalendar.set(Calendar.DAY_OF_WEEK, Integer.valueOf(mRepeatedDaysList.get(i)));
-                lCalendar.set(Calendar.HOUR_OF_DAY, mTimePicker.getCurrentHour());
-                lCalendar.set(Calendar.MINUTE, mTimePicker.getCurrentMinute());
-                lCalendar.set(Calendar.SECOND, 0);
-                lCalendar.set(Calendar.MILLISECOND, 0);
-
-                lAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-                        lCalendar.getTimeInMillis(), (DateUtils.DAY_IN_MILLIS) * 7,
-                        lPendingIntent);
-
-            }
-            Toast.makeText(this, "Repeating alarm is set at " + mTimePicker.getCurrentHour() + ":" + mTimePicker.getCurrentMinute(), Toast.LENGTH_SHORT).show();
-
-        } else {
-            int lRemainingTimeInMinutes = calculateRemainingTime(mCalendar.get(Calendar.HOUR_OF_DAY),
-                    mCalendar.get(Calendar.MINUTE), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute()) + 1;
-
-            Intent lIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            PendingIntent lPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 101, lIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Calendar lCalendar = Calendar.getInstance();
-            lCalendar.set(Calendar.SECOND, 0);
-            lCalendar.set(Calendar.MILLISECOND, 0);
-
-            lAlarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                    lCalendar.getTimeInMillis() + (lRemainingTimeInMinutes * 60000), lPendingIntent);
-
-            Toast.makeText(MainActivity.this, "Alarm in " + getRemainingTime(mCalendar.get(Calendar.HOUR_OF_DAY),
-                    mCalendar.get(Calendar.MINUTE), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute()) + " from now.", Toast.LENGTH_SHORT).show();
         }
+        AlarmManager lAlarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
+        int lRemainingTimeInMinutes = calculateRemainingTime(mCalendar.get(Calendar.HOUR_OF_DAY),
+                mCalendar.get(Calendar.MINUTE), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute()) + 1;
+
+        Intent lIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        PendingIntent lPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 101, lIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar lCalendar = Calendar.getInstance();
+        lCalendar.set(Calendar.SECOND, 0);
+        lCalendar.set(Calendar.MILLISECOND, 0);
+
+        lAlarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                lCalendar.getTimeInMillis() + (lRemainingTimeInMinutes * 60000), lPendingIntent);
+
+        Toast.makeText(MainActivity.this, "Alarm in " + getRemainingTime(mCalendar.get(Calendar.HOUR_OF_DAY),
+                mCalendar.get(Calendar.MINUTE), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute()) + " from now.", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -276,25 +265,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        Log.e(TAG, "onStart: " );
+        Log.e(TAG, "onStart: ");
         super.onStart();
     }
 
     @Override
     protected void onResume() {
-        Log.e(TAG, "onResume: " );
+        Log.e(TAG, "onResume: ");
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        Log.e(TAG, "onPause: " );
+        Log.e(TAG, "onPause: ");
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        Log.e(TAG, "onStop: " );
+        Log.e(TAG, "onStop: ");
         super.onStop();
     }
 }

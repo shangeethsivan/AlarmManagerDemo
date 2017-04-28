@@ -29,6 +29,7 @@ public class AlarmDetailActivity extends AppCompatActivity implements AudioManag
     public boolean isActivityOpenedAgain = false;
     private static final String TAG = "AlarmDetailActivity";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

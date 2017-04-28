@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">MobiClock</string>
     <string name="time_extra">time_extra</string>
+    <string name="is_repeat_alarm_set">is_repeat_alarm_set</string>
+    <string name="repetive_days">repeat_days</string>
+    <string name="time_of_alarm">alarm_time</string>
 </resources>
