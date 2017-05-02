@@ -4,4 +4,8 @@
     <string name="is_repeat_alarm_set">is_repeat_alarm_set</string>
     <string name="repetive_days">repeat_days</string>
     <string name="time_of_alarm">alarm_time</string>
+    <string name="is_timer">is_timer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

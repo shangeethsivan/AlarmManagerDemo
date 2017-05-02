@@ -1,5 +1,6 @@
 package com.shangeeth.mobiclock.ui;
 
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,17 +8,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateUtils;
+import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -27,71 +24,50 @@ import android.widget.Toast;
 import com.shangeeth.mobiclock.R;
 import com.shangeeth.mobiclock.receivers.AlarmReceiver;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
 
-//TODO: Convert the alarm to Full Screen Dialog
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class AlarmFragment extends Fragment {
 
-public class MainActivity extends AppCompatActivity {
 
-    protected TextView mTimeRemainingTV;
     private TimePicker mTimePicker;
     private Switch mRepeatSwitch;
     private LinearLayout mCheckBoxGroup;
+    private TextView mTimeRemainingTV;
     private Calendar mCalendar;
-    private static final String TAG = "MainActivity";
-    private String mRepeatedDayData = "0000000";
+    private String mRepeatedDayData;
 
-    private FrameLayout mAlarmFrameLayout;
+    public AlarmFragment() {
+        // Required empty public constructor
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View lView = inflater.inflate(R.layout.fragment_alarm, container, false);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        mAlarmFrameLayout = (FrameLayout) findViewById(R.id.alarm_layout);
-        if (getIntent() != null && getIntent().getBooleanExtra("receiver", false)) {
-                mAlarmFrameLayout.setVisibility(View.VISIBLE);
-        }
-
-        mTimePicker = (TimePicker) findViewById(R.id.time_picker);
-        mRepeatSwitch = (Switch) findViewById(R.id.repeat_switch);
-        mCheckBoxGroup = (LinearLayout) findViewById(R.id.checkbox_group_ll);
-        mTimeRemainingTV = (TextView) findViewById(R.id.time_remaining_tv);
+        mTimePicker = (TimePicker) lView.findViewById(R.id.time_picker);
+        mRepeatSwitch = (Switch) lView.findViewById(R.id.repeat_switch);
+        mCheckBoxGroup = (LinearLayout) lView.findViewById(R.id.checkbox_group_ll);
+        mTimeRemainingTV = (TextView) lView.findViewById(R.id.time_remaining_tv);
 
         mCalendar = Calendar.getInstance();
 
-        Window lWindow = getWindow();
-        lWindow.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        lWindow.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        lWindow.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        lWindow.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-
-        setListeners();
-
         final Handler lHandler = new Handler();
-        final Timer lTimer = new Timer();
-        lTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                    lHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                        Toast.makeText(MainActivity.this, "Toasted in Timer", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        },1000,3000);
+        setListeners(lView);
 
+        //TODO: set Alarm here
+        //getSupportActionBar().setTitle("Set Alarm");
+
+        return lView;
     }
 
-    /**
-     * Setting the listeners for the required variables.
-     */
-    private void setListeners() {
+    private void setListeners(View pView) {
 
         mRepeatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -114,11 +90,10 @@ public class MainActivity extends AppCompatActivity {
                         + getRemainingTime(mCalendar.get(Calendar.HOUR_OF_DAY),
                         mCalendar.get(Calendar.MINUTE), hourOfDay, minute));
 
-
             }
         });
 
-        ((CheckBox) findViewById(R.id.sunday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((CheckBox) pView.findViewById(R.id.sunday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
@@ -128,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        ((CheckBox) findViewById(R.id.monday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((CheckBox) pView.findViewById(R.id.monday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
@@ -138,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        ((CheckBox) findViewById(R.id.tuesday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((CheckBox) pView.findViewById(R.id.tuesday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
@@ -148,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        ((CheckBox) findViewById(R.id.wednesday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((CheckBox) pView.findViewById(R.id.wednesday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
@@ -158,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        ((CheckBox) findViewById(R.id.thursday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((CheckBox) pView.findViewById(R.id.thursday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
@@ -168,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        ((CheckBox) findViewById(R.id.friday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((CheckBox) pView.findViewById(R.id.friday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
@@ -178,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        ((CheckBox) findViewById(R.id.saturday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((CheckBox) pView.findViewById(R.id.saturday_cbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked)
@@ -189,38 +164,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Sets the alarm for the selected time in the time picker
-     */
-    private void setAlarm() {
-
-        if (mRepeatSwitch.isChecked()) {
-
-            SharedPreferences lSharedPreferences = getPreferences(Context.MODE_PRIVATE);
-
-            SharedPreferences.Editor lEditor = lSharedPreferences.edit();
-            lEditor.putBoolean(getString(R.string.is_repeat_alarm_set), true);
-            lEditor.putString(getString(R.string.repetive_days), mRepeatedDayData);
-            lEditor.putString(getString(R.string.time_of_alarm), mTimePicker.getCurrentHour() + ":" + mTimePicker.getCurrentMinute());
-
-        }
-        AlarmManager lAlarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
-        int lRemainingTimeInMinutes = calculateRemainingTime(mCalendar.get(Calendar.HOUR_OF_DAY),
-                mCalendar.get(Calendar.MINUTE), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute()) + 1;
-
-        Intent lIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        PendingIntent lPendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 101, lIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Calendar lCalendar = Calendar.getInstance();
-        lCalendar.set(Calendar.SECOND, 0);
-        lCalendar.set(Calendar.MILLISECOND, 0);
-
-        lAlarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                lCalendar.getTimeInMillis() + (lRemainingTimeInMinutes * 60000), lPendingIntent);
-
-        Toast.makeText(MainActivity.this, "Alarm in " + getRemainingTime(mCalendar.get(Calendar.HOUR_OF_DAY),
-                mCalendar.get(Calendar.MINUTE), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute()) + " from now.", Toast.LENGTH_SHORT).show();
-    }
 
     /**
      * Gets the remaining time for the alarm as string for display
@@ -277,27 +220,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onStart() {
-        Log.e(TAG, "onStart: ");
-        super.onStart();
+    /**
+     * Sets the alarm for the selected time in the time picker
+     */
+    public void setAlarm() {
+
+        if (mRepeatSwitch.isChecked()) {
+
+            SharedPreferences lSharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor lEditor = lSharedPreferences.edit();
+            lEditor.putBoolean(getString(R.string.is_repeat_alarm_set), true);
+            lEditor.putString(getString(R.string.repetive_days), mRepeatedDayData);
+            lEditor.putString(getString(R.string.time_of_alarm), mTimePicker.getCurrentHour() + ":" + mTimePicker.getCurrentMinute());
+
+        }
+        AlarmManager lAlarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        int lRemainingTimeInMinutes = calculateRemainingTime(mCalendar.get(Calendar.HOUR_OF_DAY),
+                mCalendar.get(Calendar.MINUTE), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute()) + 1;
+
+        Intent lIntent = new Intent(getContext(), AlarmReceiver.class);
+        PendingIntent lPendingIntent = PendingIntent.getBroadcast(getContext(), 101, lIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar lCalendar = Calendar.getInstance();
+        lCalendar.set(Calendar.SECOND, 0);
+        lCalendar.set(Calendar.MILLISECOND, 0);
+
+        lAlarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                lCalendar.getTimeInMillis() + (lRemainingTimeInMinutes * 60000), lPendingIntent);
+
+        Toast.makeText(getActivity(), "Alarm in " + getRemainingTime(mCalendar.get(Calendar.HOUR_OF_DAY),
+                mCalendar.get(Calendar.MINUTE), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute()) + " from now.", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onResume() {
-        Log.e(TAG, "onResume: ");
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        Log.e(TAG, "onPause: ");
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        Log.e(TAG, "onStop: ");
-        super.onStop();
-    }
 }

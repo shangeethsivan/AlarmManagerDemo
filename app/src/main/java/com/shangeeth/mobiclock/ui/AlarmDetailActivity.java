@@ -58,15 +58,18 @@ public class AlarmDetailActivity extends AppCompatActivity implements AudioManag
             mVibrator.vibrate(2000);
         }
 
-
         mTimeTV = (TextView) findViewById(R.id.time_tv);
         mCloseAlarmBTN = (Button) findViewById(R.id.close_alarm);
 
-        Calendar lCalendar = Calendar.getInstance();
-        lCalendar.setTimeInMillis(System.currentTimeMillis());
+        if (getIntent().getBooleanExtra(getString(R.string.is_timer),false)) {
+            mTimeTV.setText("TIMER COMPLETED");
+        } else {
+            Calendar lCalendar = Calendar.getInstance();
+            lCalendar.setTimeInMillis(System.currentTimeMillis());
 
-        SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat("hh:mm a");
-        mTimeTV.setText(lSimpleDateFormat.format(lCalendar.getTime()));
+            SimpleDateFormat lSimpleDateFormat = new SimpleDateFormat("hh:mm a");
+            mTimeTV.setText(lSimpleDateFormat.format(lCalendar.getTime()));
+        }
 
         mCloseAlarmBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +117,7 @@ public class AlarmDetailActivity extends AppCompatActivity implements AudioManag
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.e(TAG, "onRestart: " );
+        Log.e(TAG, "onRestart: ");
     }
 
     @Override
