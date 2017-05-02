@@ -280,6 +280,7 @@ public class TimerFragment extends Fragment {
 
     }
 
+
     private void setDefaultValues() {
         mHoursTv.setText("00");
         mMinutesTv.setText("00");
