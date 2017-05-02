@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +14,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shangeeth.mobiclock.R;
 
-import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +43,8 @@ public class TimerFragment extends Fragment {
     private Handler mHandler;
 
     private boolean isTimerRunning = false;
-    private Button lStopOrResumeButton;
+    private Button lPauseOrResumeButton;
+    private String mTempValue;
 
     public TimerFragment() {
         // Required empty public constructor
@@ -69,15 +68,6 @@ public class TimerFragment extends Fragment {
         mSelectedItem = mSecondsTv;
         selectTV(mSelectedItem);
 
-        mHoursTv.setFilters(new InputFilter[]{new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (Integer.valueOf(source.toString()) <= 0 && Integer.valueOf(source.toString()) >= 59)
-                    return "59";
-                else
-                    return source;
-            }
-        }});
         setOnClickListeners(lView);
 
         return lView;
@@ -196,18 +186,19 @@ public class TimerFragment extends Fragment {
             }
         });
 
-        lStopOrResumeButton = (Button) pView.findViewById(R.id.stop_btn);
-        lStopOrResumeButton.setOnClickListener(new View.OnClickListener() {
+        lPauseOrResumeButton = (Button) pView.findViewById(R.id.pause_btn);
+        lPauseOrResumeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isTimerRunning) {
                     mTimer.cancel();
+                    mTimer.cancel();
                     isTimerRunning = false;
-                    lStopOrResumeButton.setText("Resume");
-                    lStopOrResumeButton.setBackgroundResource(R.color.green);
+                    lPauseOrResumeButton.setText("Resume");
+                    lPauseOrResumeButton.setBackgroundResource(R.color.green);
                 } else {
-                    lStopOrResumeButton.setText("Stop");
-                    lStopOrResumeButton.setBackgroundResource(R.color.red);
+                    lPauseOrResumeButton.setText("Pause");
+                    lPauseOrResumeButton.setBackgroundResource(R.color.red);
                     startTimer();
                 }
             }
@@ -222,23 +213,30 @@ public class TimerFragment extends Fragment {
 
     }
 
+    /**
+     * Handling the button Pressed action
+     *
+     * @param pNumber the number pressed
+     */
     private void buttonPressed(String pNumber) {
-        boolean lShouldCheck = false;
-        if (Integer.valueOf(mSelectedItem.getText().toString()) == 59) {
-            mSelectedItem.setText("0" + pNumber);
-        } else {
-            mSelectedItem.setText(mSelectedItem.getText().toString().substring(1) + pNumber);
-            lShouldCheck = true;
-        }
-        checkForRange(lShouldCheck);
+//        if (Integer.valueOf(mSelectedItem.getText().toString()) == 59 ) {
+//            mSelectedItem.setText("0" + pNumber);
+//        } else {
+        mTempValue = mSelectedItem.getText().toString().substring(0,1);
+        mSelectedItem.setText(mSelectedItem.getText().toString().substring(1) + pNumber);
+        checkForRange();
+//        }
     }
 
+    /**
+     * Resets the Timer to initial state
+     */
     private void resetTimer() {
 
         mTimer.cancel();
 
-        lStopOrResumeButton.setText("Stop");
-        lStopOrResumeButton.setBackgroundResource(R.color.red);
+        lPauseOrResumeButton.setText("Pause");
+        lPauseOrResumeButton.setBackgroundResource(R.color.red);
 
         isTimerRunning = false;
         setDefaultValues();
@@ -266,12 +264,19 @@ public class TimerFragment extends Fragment {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+
                         if (mTotalTimerTimeInMs - 1000 == 0) {
                             resetTimer();
                             startActivity(new Intent(getActivity(), AlarmDetailActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra(getString(R.string.is_timer), true));
                         }
                         mTotalTimerTimeInMs = mTotalTimerTimeInMs - 1000;
-                        updateUi();
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateUi();
+                            }
+                        });
                     }
                 });
             }
@@ -281,6 +286,9 @@ public class TimerFragment extends Fragment {
     }
 
 
+    /**
+     * Sets the default value 00
+     */
     private void setDefaultValues() {
         mHoursTv.setText("00");
         mMinutesTv.setText("00");
@@ -304,8 +312,6 @@ public class TimerFragment extends Fragment {
      * Updates the Ui
      */
     private void updateUi() {
-        Calendar lCalendar = Calendar.getInstance();
-        lCalendar.setTimeInMillis(mTotalTimerTimeInMs);
         mHoursTv.setText(String.format("%02d", TimeUnit.MILLISECONDS.toHours(mTotalTimerTimeInMs)));
         mMinutesTv.setText(String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(mTotalTimerTimeInMs) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(mTotalTimerTimeInMs))));
         mSecondsTv.setText(String.format("%02d", TimeUnit.MILLISECONDS.toSeconds(mTotalTimerTimeInMs) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(mTotalTimerTimeInMs))));
@@ -321,6 +327,9 @@ public class TimerFragment extends Fragment {
         pSelectedTV.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
     }
 
+    /**
+     * Once the timer starts the default color is set
+     */
     public void setDefaultColor() {
 
         mHoursTv.setTextColor(ContextCompat.getColor(getContext(), R.color.dark_grey));
@@ -329,16 +338,23 @@ public class TimerFragment extends Fragment {
 
     }
 
-    private void checkForRange(boolean pShouldCheck) {
-        if (pShouldCheck) {
-            if (Integer.valueOf(mMinutesTv.getText().toString()) > 59) {
-                mMinutesTv.setText("59");
-            }
-            if (Integer.valueOf(mSecondsTv.getText().toString()) > 59) {
-                mSecondsTv.setText("59");
-            }
+    /**
+     * Checking the range
+     */
+    private void checkForRange() {
+        if (Integer.valueOf(mMinutesTv.getText().toString()) > 59) {
+            mMinutesTv.setText(mTempValue + mMinutesTv.getText().toString().substring(0, 1));
+            Toast.makeText(getActivity(), "The value cant be more than 59", Toast.LENGTH_SHORT).show();
+        }
+        if (Integer.valueOf(mSecondsTv.getText().toString()) > 59) {
+            mSecondsTv.setText(mTempValue+ mSecondsTv.getText().toString().substring(0, 1));
+            Toast.makeText(getActivity(), "The value cant be more than 59", Toast.LENGTH_SHORT).show();
         }
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mTimer.cancel();
+    }
 }

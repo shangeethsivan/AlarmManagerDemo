@@ -85,12 +85,12 @@
         android:visibility="gone">
 
         <Button
-            android:id="@+id/stop_btn"
+            android:id="@+id/pause_btn"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:background="@color/red"
-            android:text="STOP"
+            android:text="PAUSE"
             android:textColor="@color/white" />
 
         <Button
