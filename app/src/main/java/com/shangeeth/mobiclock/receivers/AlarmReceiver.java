@@ -7,7 +7,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.shangeeth.mobiclock.ui.AlarmDetailActivity;
-import com.shangeeth.mobiclock.ui.MainActivity;
 
 /**
  * Created by user on 26/04/17.

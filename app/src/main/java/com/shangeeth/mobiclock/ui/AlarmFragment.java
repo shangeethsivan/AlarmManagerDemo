@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,7 +39,7 @@ public class AlarmFragment extends Fragment {
     private TextView mTimeRemainingTV;
     private Calendar mCalendar;
     private String mRepeatedDayData;
-
+    private static final String TAG = "AlarmFragment";
     public AlarmFragment() {
         // Required empty public constructor
     }
@@ -47,6 +48,8 @@ public class AlarmFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.e(TAG, "onCreateView: " );
         // Inflate the layout for this fragment
         View lView = inflater.inflate(R.layout.fragment_alarm, container, false);
 
@@ -253,4 +256,63 @@ public class AlarmFragment extends Fragment {
                 mCalendar.get(Calendar.MINUTE), mTimePicker.getCurrentHour(), mTimePicker.getCurrentMinute()) + " from now.", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        Log.e(TAG, "onAttach: " );
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.e(TAG, "onCreate: " );
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.e(TAG, "onActivityCreated: " );
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        Log.e(TAG, "onStart: " );
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        Log.e(TAG, "onResume: " );
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.e(TAG, "onPause: " );
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.e(TAG, "onStop: " );
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.e(TAG, "onDestroyView: " );
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e(TAG, "onDestroy: " );
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        Log.e(TAG, "onDetach: " );
+        super.onDetach();
+    }
 }

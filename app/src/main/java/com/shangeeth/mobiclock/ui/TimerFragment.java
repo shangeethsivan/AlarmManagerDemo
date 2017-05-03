@@ -222,7 +222,7 @@ public class TimerFragment extends Fragment {
 //        if (Integer.valueOf(mSelectedItem.getText().toString()) == 59 ) {
 //            mSelectedItem.setText("0" + pNumber);
 //        } else {
-        mTempValue = mSelectedItem.getText().toString().substring(0,1);
+        mTempValue = mSelectedItem.getText().toString().substring(0, 1);
         mSelectedItem.setText(mSelectedItem.getText().toString().substring(1) + pNumber);
         checkForRange();
 //        }
@@ -347,7 +347,7 @@ public class TimerFragment extends Fragment {
             Toast.makeText(getActivity(), "The value cant be more than 59", Toast.LENGTH_SHORT).show();
         }
         if (Integer.valueOf(mSecondsTv.getText().toString()) > 59) {
-            mSecondsTv.setText(mTempValue+ mSecondsTv.getText().toString().substring(0, 1));
+            mSecondsTv.setText(mTempValue + mSecondsTv.getText().toString().substring(0, 1));
             Toast.makeText(getActivity(), "The value cant be more than 59", Toast.LENGTH_SHORT).show();
         }
     }
@@ -355,6 +355,7 @@ public class TimerFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mTimer.cancel();
+        if (mTimer != null)
+            mTimer.cancel();
     }
 }
